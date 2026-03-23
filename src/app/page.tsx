@@ -1,7 +1,7 @@
 import Link from "next/link";
 import * as LucideIcons from "lucide-react";
 import { Shield, ArrowRight, AlertTriangle } from "lucide-react";
-import { getAllApps, getFeaturedClauses, getAllCategories, getCategoryCount } from "@/lib/data";
+import { getAllApps, getFeaturedClauses, getAllCategories, getCategoryCount, getRecentlyAnalyzed } from "@/lib/data";
 import { SeverityBadge } from "@/components/analysis/SeverityBadge";
 
 function CategoryIcon({ name }: { name: string }) {
@@ -14,6 +14,7 @@ export default function HomePage() {
   const apps = getAllApps();
   const featured = getFeaturedClauses();
   const categories = getAllCategories();
+  const recentApps = getRecentlyAnalyzed(4);
 
   return (
     <div>
@@ -129,6 +130,42 @@ export default function HomePage() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* Recently Analyzed */}
+      <section className="mx-auto max-w-6xl px-4 py-16">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-1">Recently Analyzed</h2>
+            <p className="text-sm text-muted">The latest apps added to our database.</p>
+          </div>
+          <Link
+            href="/recent"
+            className="hidden sm:inline-flex items-center gap-1 text-sm text-accent hover:text-accent-hover transition-colors"
+          >
+            View all <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {recentApps.map((app) => (
+            <Link
+              key={app.slug}
+              href={`/apps/${app.slug}`}
+              className="group rounded-xl border border-border bg-card p-4 transition-all hover:border-accent/30 hover:bg-card-hover"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-2xl">{app.icon}</span>
+                <div className="min-w-0">
+                  <p className="font-semibold text-sm text-foreground group-hover:text-accent transition-colors truncate">
+                    {app.name}
+                  </p>
+                  <p className="text-xs text-muted">{app.analysisDate}</p>
+                </div>
+              </div>
+              <p className="text-xs text-muted line-clamp-2">{app.summary}</p>
+            </Link>
+          ))}
         </div>
       </section>
 

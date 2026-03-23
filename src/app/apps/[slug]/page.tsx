@@ -6,6 +6,7 @@ import { getAllApps, getAppBySlug } from "@/lib/data";
 import { SeverityBadge } from "@/components/analysis/SeverityBadge";
 import { ThreatMeter } from "@/components/analysis/ThreatMeter";
 import { ClauseBlock } from "@/components/analysis/ClauseBlock";
+import { AppJsonLd } from "@/components/analysis/AppJsonLd";
 
 export function generateStaticParams() {
   return getAllApps().map((app) => ({ slug: app.slug }));
@@ -36,6 +37,7 @@ export default async function AppDetailPage({
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
+      <AppJsonLd app={app} />
       <Link
         href="/apps"
         className="inline-flex items-center gap-1 text-sm text-muted hover:text-foreground transition-colors mb-8"
@@ -94,7 +96,7 @@ export default async function AppDetailPage({
 
       <div className="space-y-3">
         {app.clauses.map((clause) => (
-          <ClauseBlock key={clause.id} clause={clause} />
+          <ClauseBlock key={clause.id} clause={clause} appName={app.name} />
         ))}
       </div>
     </div>

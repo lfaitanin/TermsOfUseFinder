@@ -55,3 +55,9 @@ export function searchApps(query: string): AnalyzedApp[] {
 export function getCategoryCount(categorySlug: CategorySlug): number {
   return getAppsByCategory(categorySlug).length;
 }
+
+export function getRecentlyAnalyzed(limit = 6): AnalyzedApp[] {
+  return [...apps]
+    .sort((a, b) => b.analysisDate.localeCompare(a.analysisDate))
+    .slice(0, limit);
+}

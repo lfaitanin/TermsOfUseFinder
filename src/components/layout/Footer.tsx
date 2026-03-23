@@ -26,6 +26,9 @@ export function Footer() {
               <Link href="/categories" className="text-sm text-muted hover:text-foreground transition-colors">
                 Categories
               </Link>
+              <Link href="/recent" className="text-sm text-muted hover:text-foreground transition-colors">
+                Recently Analyzed
+              </Link>
               <Link href="/about" className="text-sm text-muted hover:text-foreground transition-colors">
                 About
               </Link>

@@ -1,14 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, AlertTriangle } from "lucide-react";
+import { ChevronDown, AlertTriangle, Share2, Check } from "lucide-react";
 import { SeverityBadge } from "./SeverityBadge";
 import { CategoryTag } from "./CategoryTag";
 import { cn } from "@/lib/utils";
 import type { ConcerningClause } from "@/data/types";
 
-export function ClauseBlock({ clause }: { clause: ConcerningClause }) {
+export function ClauseBlock({ clause, appName }: { clause: ConcerningClause; appName?: string }) {
   const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  function handleShare() {
+    const text = appName
+      ? `"${clause.title}" — Found in ${appName}'s Terms of Service. ${typeof window !== "undefined" ? window.location.href : ""} via ToS Exposed`
+      : `"${clause.title}" — ${typeof window !== "undefined" ? window.location.href : ""} via ToS Exposed`;
+
+    if (navigator.share) {
+      navigator.share({ title: clause.title, text, url: window.location.href });
+    } else {
+      navigator.clipboard.writeText(text).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      });
+    }
+  }
 
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden transition-colors hover:border-border">
@@ -61,10 +77,22 @@ export function ClauseBlock({ clause }: { clause: ConcerningClause }) {
             </ul>
           </div>
 
-          <div className="flex flex-wrap gap-2 pt-1">
-            {clause.categories.map((cat) => (
-              <CategoryTag key={cat} slug={cat} />
-            ))}
+          <div className="flex items-center justify-between flex-wrap gap-2 pt-1">
+            <div className="flex flex-wrap gap-2">
+              {clause.categories.map((cat) => (
+                <CategoryTag key={cat} slug={cat} />
+              ))}
+            </div>
+            <button
+              onClick={handleShare}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs text-muted transition-colors hover:border-accent/40 hover:text-accent"
+            >
+              {copied ? (
+                <><Check className="h-3 w-3" /> Copied!</>
+              ) : (
+                <><Share2 className="h-3 w-3" /> Share</>
+              )}
+            </button>
           </div>
         </div>
       )}
